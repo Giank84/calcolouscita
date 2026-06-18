@@ -8,12 +8,12 @@
 
 <style>
     :root {
-        --bg: #f4f6fa;
+        --bg: #eef2f7;
         --card: #ffffff;
         --text: #1e1e1e;
         --accent: #2a5298;
         --accent-dark: #1e3c72;
-        --input-bg: #eef1f6;
+        --input-bg: #e3e8f0;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -42,106 +42,118 @@
 
     .card {
         background: var(--card);
-        width: 420px;
-        padding: 32px;
-        border-radius: 20px;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+        width: 520px;
+        padding: 40px;
+        border-radius: 26px;
+        box-shadow: 0 18px 50px rgba(0,0,0,0.25);
         animation: fadeIn 0.6s ease-out;
         transition: background 0.4s ease, color 0.4s ease;
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(25px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
         text-align: center;
-        margin-bottom: 25px;
+        margin-bottom: 35px;
         color: var(--accent-dark);
-        font-weight: 700;
+        font-weight: 800;
+        font-size: 32px;
+        letter-spacing: 0.5px;
     }
 
     label {
-        font-weight: 600;
-        margin-top: 15px;
+        font-weight: 700;
+        margin-top: 20px;
         display: block;
+        font-size: 20px;
     }
 
     .input-group {
-        margin-top: 6px;
+        margin-top: 10px;
     }
 
     .input-icon {
         display: flex;
         align-items: center;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         color: var(--accent-dark);
-        font-size: 22px;
+        font-size: 28px;
     }
 
     .time-picker {
         display: flex;
         align-items: center;
         background: var(--input-bg);
-        border-radius: 12px;
-        padding: 10px 14px;
-        transition: background 0.4s ease;
+        border-radius: 14px;
+        padding: 14px 18px;
+        transition: background 0.4s ease, transform 0.2s ease;
+        font-size: 22px;
+    }
+
+    .time-picker:hover {
+        transform: scale(1.03);
     }
 
     .time-picker select {
         background: transparent;
         border: none;
-        font-size: 17px;
+        font-size: 22px;
         color: var(--text);
         outline: none;
         appearance: none;
-        padding: 4px;
+        padding: 6px;
         cursor: pointer;
+        font-weight: 600;
     }
 
     .time-picker span {
-        margin: 0 6px;
-        font-weight: 700;
+        margin: 0 10px;
+        font-weight: 800;
         color: var(--accent-dark);
+        font-size: 26px;
     }
 
     button {
         width: 100%;
-        margin-top: 28px;
-        padding: 14px;
-        font-size: 18px;
-        font-weight: 600;
+        margin-top: 35px;
+        padding: 18px;
+        font-size: 22px;
+        font-weight: 700;
         border: none;
-        border-radius: 12px;
+        border-radius: 16px;
         background: var(--accent-dark);
         color: white;
         cursor: pointer;
         transition: 0.25s;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
     }
 
     button:hover {
         background: var(--accent);
-        transform: scale(1.03);
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.35);
     }
 
     #result {
-        margin-top: 28px;
-        padding: 22px;
+        margin-top: 35px;
+        padding: 28px;
         background: var(--input-bg);
-        border-radius: 14px;
+        border-radius: 18px;
         text-align: center;
-        font-size: 19px;
-        font-weight: 600;
-        box-shadow: inset 0 0 12px rgba(0,0,0,0.08);
+        font-size: 26px;
+        font-weight: 700;
+        box-shadow: inset 0 0 14px rgba(0,0,0,0.08);
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(15px) scale(0.95);
         transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
     #result.show {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 </style>
 </head>
@@ -238,39 +250,52 @@ function calcola() {
     let psMin = toMinutes(pausaStart);
     let peMin = toMinutes(pausaEnd);
 
+    let permesso = 0;
+
+    // Regola 1: ingresso prima delle 08:00 → considerato 08:00
     const minIngresso = 8 * 60;
     if (inMin < minIngresso) inMin = minIngresso;
 
+    // Regola 2: ingresso dopo le 10:00 → considerato 09:00 + differenza come permesso
+    const maxIngresso = 10 * 60;
+    if (inMin > maxIngresso) {
+        permesso += inMin - (9 * 60);
+        inMin = 9 * 60;
+    }
+
+    // Fascia pausa valida
     const pausaMinStart = 13 * 60;
     const pausaMaxEnd = 14 * 60 + 30;
 
-    let permesso = 0;
-
+    // Pausa inizio prima delle 13 → differenza va a permesso
     if (psMin < pausaMinStart) {
         permesso += pausaMinStart - psMin;
         psMin = pausaMinStart;
     }
 
+    // Pausa fine dopo 14:30 → differenza va a permesso
     if (peMin > pausaMaxEnd) {
         permesso += peMin - pausaMaxEnd;
         peMin = pausaMaxEnd;
     }
 
+    // Durata pausa effettiva
     let pausaDurata = peMin - psMin;
 
-    if (pausaDurata < 30) {
-        permesso += 30 - pausaDurata;
-        pausaDurata = 30;
-    }
+    // Pausa minima 30 min → NON genera permesso
+    if (pausaDurata < 30) pausaDurata = 30;
+
+    // Pausa massima 90 min → eccedenza va a permesso
     if (pausaDurata > 90) {
         permesso += pausaDurata - 90;
         pausaDurata = 90;
     }
 
+    // Orario uscita
     const uscita = inMin + 8 * 60 + pausaDurata;
 
     result.innerHTML = `
-        🕒 Uscita possibile (24h): <b>${toHHMM(uscita)}</b><br>
+        🕒 Uscita possibile (24h): <b>${toHHMM(uscita)}</b><br><br>
         🎫 Permesso: <b>${permesso} minuti</b>
     `;
 
