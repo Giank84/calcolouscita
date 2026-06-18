@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Calcolo Orario di Uscita</title>
+<style>
+    body { font-family: Arial; margin: 40px; }
+    label { display: block; margin-top: 15px; }
+    input { padding: 5px; font-size: 16px; }
+    #result { margin-top: 25px; font-size: 20px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>Calcolo Orario di Uscita dal Lavoro</h2>
+
+<label>Orario di ingresso:
+    <input type="time" id="ingresso">
+</label>
+
+<label>Inizio pausa pranzo:
+    <input type="time" id="pausaStart">
+</label>
+
+<label>Fine pausa pranzo:
+    <input type="time" id="pausaEnd">
+</label>
+
+<button onclick="calcola()">Calcola</button>
+
+<div id="result"></div>
+
+<script>
+function toMinutes(t) {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+}
+
+function toHHMM(min) {
+    min = (min + 1440) % 1440;
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+}
+
+function calcola() {
+    let ingresso = document.getElementById("ingresso").value;
+    let pausaStart = document.getElementById("pausaStart").value;
+    let pausaEnd = document.getElementById("pausaEnd").value;
+
+    if (!ingresso || !pausaStart || !pausaEnd) {
+        document.getElementById("result").innerHTML = "Compila tutti i campi.";
+        return;
+    }
+
+    let inMin = toMinutes(ingresso);
+    let psMin = toMinutes(pausaStart);
+    let peMin = toMinutes(pausaEnd);
+
+    // Regola: ingresso minimo 08:00
+    const minIngresso = 8 * 60;
+    if (inMin < minIngresso) inMin = minIngresso;
+
+    // Fascia pausa consentita
+    const pausaMinStart = 13 * 60;
+    const pausaMaxEnd = 14 * 60 + 30;
+
+    let permesso = 0;
+
+    // Se pausa inizia prima delle 13 → differenza va a permesso
+    if (psMin < pausaMinStart) {
+        permesso += pausaMinStart - psMin;
+        psMin = pausaMinStart;
+    }
+
+    // Se pausa finisce dopo le 14:30 → differenza va a permesso
+    if (peMin > pausaMaxEnd) {
+        permesso += peMin - pausaMaxEnd;
+        peMin = pausaMaxEnd;
+    }
+
+    // Durata pausa effettiva
+    let pausaDurata = peMin - psMin;
+
+    // Pausa minima 30 min, massima 90 min
+    if (pausaDurata < 30) {
+        permesso += 30 - pausaDurata;
+        pausaDurata = 30;
+    }
+    if (pausaDurata > 90) {
+        permesso += pausaDurata - 90;
+        pausaDurata = 90;
+    }
+
+    // Orario di uscita = ingresso + 8h + pausa effettiva
+    const uscita = inMin + 8 * 60 + pausaDurata;
+
+    document.getElementById("result").innerHTML =
+        "Orario di uscita possibile: <b>" + toHHMM(uscita) +
+        "</b><br>Permesso: <b>" + permesso + " minuti</b>";
+}
+</script>
+
+</body>
+</html>
