@@ -69,28 +69,41 @@
     }
 
     .input-group {
+        margin-top: 6px;
+    }
+
+    .input-icon {
+        display: flex;
+        align-items: center;
+        margin-bottom: 6px;
+        color: var(--accent-dark);
+        font-size: 22px;
+    }
+
+    .time-picker {
         display: flex;
         align-items: center;
         background: var(--input-bg);
         border-radius: 12px;
         padding: 10px 14px;
-        margin-top: 6px;
         transition: background 0.4s ease;
     }
 
-    .input-group span {
-        font-size: 24px;
-        margin-right: 10px;
-        color: var(--accent-dark);
+    .time-picker select {
+        background: transparent;
+        border: none;
+        font-size: 17px;
+        color: var(--text);
+        outline: none;
+        appearance: none;
+        padding: 4px;
+        cursor: pointer;
     }
 
-    input {
-        border: none;
-        background: transparent;
-        font-size: 17px;
-        width: 100%;
-        outline: none;
-        color: var(--text);
+    .time-picker span {
+        margin: 0 6px;
+        font-weight: 700;
+        color: var(--accent-dark);
     }
 
     button {
@@ -139,21 +152,33 @@
     <h2>Calcolo Orario di Uscita</h2>
 
     <label>Orario di ingresso</label>
-    <div class="input-group">
-        <span class="material-symbols-rounded">login</span>
-        <input type="time" id="ingresso">
+    <div class="input-group" id="ingresso">
+        <div class="input-icon"><span class="material-symbols-rounded">login</span></div>
+        <div class="time-picker">
+            <select class="hour"></select>
+            <span>:</span>
+            <select class="minute"></select>
+        </div>
     </div>
 
     <label>Inizio pausa pranzo</label>
-    <div class="input-group">
-        <span class="material-symbols-rounded">restaurant</span>
-        <input type="time" id="pausaStart">
+    <div class="input-group" id="pausaStart">
+        <div class="input-icon"><span class="material-symbols-rounded">restaurant</span></div>
+        <div class="time-picker">
+            <select class="hour"></select>
+            <span>:</span>
+            <select class="minute"></select>
+        </div>
     </div>
 
     <label>Fine pausa pranzo</label>
-    <div class="input-group">
-        <span class="material-symbols-rounded">hourglass_bottom</span>
-        <input type="time" id="pausaEnd">
+    <div class="input-group" id="pausaEnd">
+        <div class="input-icon"><span class="material-symbols-rounded">hourglass_bottom</span></div>
+        <div class="time-picker">
+            <select class="hour"></select>
+            <span>:</span>
+            <select class="minute"></select>
+        </div>
     </div>
 
     <button onclick="calcola()">Calcola</button>
@@ -162,6 +187,34 @@
 </div>
 
 <script>
+function setupTimePickers() {
+    document.querySelectorAll(".time-picker").forEach(tp => {
+        const hourSel = tp.querySelector(".hour");
+        const minSel = tp.querySelector(".minute");
+
+        for (let h = 0; h < 24; h++) {
+            const opt = document.createElement("option");
+            opt.value = h.toString().padStart(2, "0");
+            opt.textContent = opt.value;
+            hourSel.appendChild(opt);
+        }
+
+        for (let m = 0; m < 60; m++) {
+            const opt = document.createElement("option");
+            opt.value = m.toString().padStart(2, "0");
+            opt.textContent = opt.value;
+            minSel.appendChild(opt);
+        }
+    });
+}
+
+function getTime(id) {
+    const group = document.getElementById(id);
+    const h = group.querySelector(".hour").value;
+    const m = group.querySelector(".minute").value;
+    return `${h}:${m}`;
+}
+
 function toMinutes(t) {
     const [h, m] = t.split(":").map(Number);
     return h * 60 + m;
@@ -175,16 +228,11 @@ function toHHMM(min) {
 }
 
 function calcola() {
-    let ingresso = document.getElementById("ingresso").value;
-    let pausaStart = document.getElementById("pausaStart").value;
-    let pausaEnd = document.getElementById("pausaEnd").value;
-    let result = document.getElementById("result");
+    let ingresso = getTime("ingresso");
+    let pausaStart = getTime("pausaStart");
+    let pausaEnd = getTime("pausaEnd");
 
-    if (!ingresso || !pausaStart || !pausaEnd) {
-        result.innerHTML = "Compila tutti i campi.";
-        result.classList.add("show");
-        return;
-    }
+    let result = document.getElementById("result");
 
     let inMin = toMinutes(ingresso);
     let psMin = toMinutes(pausaStart);
@@ -228,6 +276,8 @@ function calcola() {
 
     result.classList.add("show");
 }
+
+setupTimePickers();
 </script>
 
 </body>
