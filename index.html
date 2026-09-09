@@ -50,22 +50,6 @@
 
     .wave-bg svg { width: 100%; height: 100%; display: block; }
 
-    .wave-bg svg path:nth-of-type(1) {
-        animation: waveDrift 9s ease-in-out infinite;
-        transform-origin: center bottom;
-    }
-
-    .wave-bg svg path:nth-of-type(2) {
-        animation: waveDrift 7s ease-in-out infinite reverse;
-        transform-origin: center bottom;
-        animation-delay: -2s;
-    }
-
-    @keyframes waveDrift {
-        0%, 100% { transform: translateX(0) translateY(0); }
-        50% { transform: translateX(-18px) translateY(8px); }
-    }
-
     .stars {
         position: fixed;
         inset: 0;
@@ -75,17 +59,8 @@
             radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,0.4), transparent),
             radial-gradient(1.5px 1.5px at 85% 10%, rgba(255,255,255,0.5), transparent),
             radial-gradient(1px 1px at 40% 8%, rgba(255,255,255,0.35), transparent),
-            radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,0.3), transparent),
-            radial-gradient(1px 1px at 12% 45%, rgba(255,255,255,0.4), transparent),
-            radial-gradient(1.5px 1.5px at 92% 40%, rgba(255,255,255,0.35), transparent),
-            radial-gradient(1px 1px at 65% 6%, rgba(255,255,255,0.4), transparent);
+            radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,0.3), transparent);
         background-size: 100% 100%;
-        animation: twinkle 4.5s ease-in-out infinite;
-    }
-
-    @keyframes twinkle {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
     }
 
     .card {
@@ -118,14 +93,6 @@
     .crest .material-symbols-rounded {
         font-size: 34px;
         color: var(--gold);
-        display: inline-block;
-        animation: sway 3.6s ease-in-out infinite;
-        transform-origin: 50% 85%;
-    }
-
-    @keyframes sway {
-        0%, 100% { transform: rotate(-6deg); }
-        50% { transform: rotate(6deg); }
     }
 
     .eyebrow {
@@ -163,13 +130,6 @@
         height: 1.5px;
         background: linear-gradient(90deg, transparent, var(--gold), transparent);
         margin: 0 auto 30px;
-        background-size: 200% 100%;
-        animation: shimmer 3s linear infinite;
-    }
-
-    @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
     }
 
     .field {
@@ -348,21 +308,6 @@
         background: linear-gradient(135deg, var(--gold-light), var(--gold));
         transition: transform 0.15s ease, box-shadow 0.25s ease, filter 0.2s ease;
         box-shadow: 0 10px 25px -8px rgba(201,164,92,0.55);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .calc-btn .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(6,28,51,0.35);
-        transform: scale(0);
-        animation: rippleExpand 0.6s ease-out forwards;
-        pointer-events: none;
-    }
-
-    @keyframes rippleExpand {
-        to { transform: scale(1); opacity: 0; }
     }
 
     .calc-btn:hover .face {
@@ -405,26 +350,6 @@
         max-height: 480px;
         opacity: 1;
         margin-top: 26px;
-    }
-
-    #result.show .result-inner {
-        animation: stampIn 0.55s cubic-bezier(.2,.9,.3,1.1);
-    }
-
-    @keyframes stampIn {
-        0% { opacity: 0; transform: scale(1.35) rotate(-9deg); }
-        55% { opacity: 1; transform: scale(0.94) rotate(2deg); }
-        100% { opacity: 1; transform: scale(1) rotate(0); }
-    }
-
-    .result-value.pop {
-        animation: valuePop 0.5s ease;
-    }
-
-    @keyframes valuePop {
-        0% { transform: scale(1); text-shadow: none; }
-        40% { transform: scale(1.18); text-shadow: 0 0 14px rgba(201,164,92,0.7); }
-        100% { transform: scale(1); text-shadow: none; }
     }
 
     .result-inner {
@@ -480,7 +405,6 @@
         font-weight: 700;
         color: var(--foam);
         letter-spacing: 0.01em;
-        display: inline-block;
     }
 
     .result-value.permesso {
@@ -508,33 +432,6 @@
         letter-spacing: 0.02em;
         margin-top: 4px;
     }
-
-    .log-footer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        margin-top: 32px;
-        padding-top: 16px;
-        border-top: 1px solid rgba(201,164,92,0.15);
-        font-size: 10.5px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--text-soft);
-        opacity: 0;
-        animation: logFadeIn 0.9s ease forwards;
-        animation-delay: 0.9s;
-    }
-
-    .log-footer .material-symbols-rounded {
-        font-size: 14px;
-        color: var(--gold);
-    }
-
-    @keyframes logFadeIn {
-        from { opacity: 0; transform: translateY(6px); }
-        to { opacity: 0.8; transform: translateY(0); }
-    }
 </style>
 </head>
 
@@ -552,7 +449,7 @@
     <div class="crest">
         <span class="material-symbols-rounded">sailing</span>
     </div>
-    <div class="eyebrow">Registro di bordo_v3</div>
+    <div class="eyebrow">Registro di bordo</div>
     <h2>Calcolo orario di uscita</h2>
     <span class="subtitle">Imposta la rotta della tua giornata lavorativa</span>
     <div class="gold-rule"></div>
@@ -643,11 +540,6 @@
             </div>
             <p class="note hidden" id="noteDesiderata"></p>
         </div>
-    </div>
-
-    <div class="log-footer" id="visitCounter">
-        <span class="material-symbols-rounded">history_edu</span>
-        <span id="visitCountText">Registrazione in corso…</span>
     </div>
 </div>
 
@@ -744,44 +636,6 @@ function toggleDesiderata() {
     panel.classList.toggle("open", checkbox.checked);
 }
 
-function spawnRipple(e) {
-    const face = e.currentTarget.querySelector(".face");
-    const rect = face.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height) * 1.6;
-    const ripple = document.createElement("span");
-    ripple.className = "ripple";
-    ripple.style.width = ripple.style.height = size + "px";
-    ripple.style.left = (e.clientX - rect.left - size / 2) + "px";
-    ripple.style.top = (e.clientY - rect.top - size / 2) + "px";
-    face.appendChild(ripple);
-    ripple.addEventListener("animationend", () => ripple.remove());
-}
-
-function popValue(el) {
-    el.classList.remove("pop");
-    // force reflow so the animation can replay on repeated clicks
-    void el.offsetWidth;
-    el.classList.add("pop");
-}
-
-async function incrementVisitCounter() {
-    const label = document.getElementById("visitCountText");
-    try {
-        let current = 0;
-        try {
-            const existing = await window.storage.get("calcolo-uscita-visite", false);
-            current = existing ? (parseInt(existing.value, 10) || 0) : 0;
-        } catch (e) {
-            current = 0;
-        }
-        const next = current + 1;
-        await window.storage.set("calcolo-uscita-visite", String(next), false);
-        label.textContent = "Voce di registro n\u00b0 " + next;
-    } catch (e) {
-        document.getElementById("visitCounter").style.display = "none";
-    }
-}
-
 function calcola() {
     playStampSound();
 
@@ -835,8 +689,6 @@ function calcola() {
 
     document.getElementById("uscitaVal").textContent = toHHMM(uscita);
     document.getElementById("permessoVal").textContent = formatDurata(permesso);
-    popValue(document.getElementById("uscitaVal"));
-    popValue(document.getElementById("permessoVal"));
 
     // --- Optional: desired exit time ---
     const vuoleUscitaDesiderata = document.getElementById("desideriUscita").checked;
@@ -860,7 +712,6 @@ function calcola() {
         const desMin = toMinutes(uscitaDes);
 
         document.getElementById("uscitaDesVal").textContent = toHHMM(desMin);
-        popValue(document.getElementById("uscitaDesVal"));
         rowUscitaDesiderata.classList.remove("hidden");
         dividerDesiderata.classList.remove("hidden");
 
@@ -869,7 +720,6 @@ function calcola() {
 
             labelPermessoTotale.textContent = "Permesso richiesto";
             document.getElementById("permessoTotaleVal").textContent = formatDurata(totale);
-            popValue(document.getElementById("permessoTotaleVal"));
             rowPermessoTotale.classList.remove("hidden");
 
             noteDesiderata.textContent = "L'uscita desiderata è anticipata: richiedi il permesso indicato.";
@@ -895,9 +745,6 @@ function calcola() {
 }
 
 setupTimePickers();
-incrementVisitCounter();
-
-document.querySelector(".calc-btn").addEventListener("click", spawnRipple);
 
 document.getElementById("toggleDesiderata").addEventListener("click", function(e) {
     // avoid double-toggling when the click lands directly on the checkbox/track
@@ -910,15 +757,5 @@ document.getElementById("desideriUscita").addEventListener("change", function() 
 });
 </script>
 
-
-    <div id="sfcagw5d7te8sfb4z7tp6qhrletlqeem7kc">
-    </div>
-        <script type="text/javascript" src="https://counter11.optistats.ovh/private/counter.js?c=agw5d7te8sfb4z7tp6qhrletlqeem7kc&down=async" async>
-        </script>
-    <noscript>
-        <a href="https://www.contatoreaccessi.com" title="contatore visite html free"><img src="https://counter11.optistats.ovh/private/contatoreaccessi.php?c=agw5d7te8sfb4z7tp6qhrletlqeem7kc" border="0" title="contatore visite html free" alt="contatore visite html free"></a>
-    </noscript>
-
-    
 </body>
 </html>
