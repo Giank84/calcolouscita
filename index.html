@@ -552,7 +552,7 @@
     <div class="crest">
         <span class="material-symbols-rounded">sailing</span>
     </div>
-    <div class="eyebrow">Registro di bordo_v2</div>
+    <div class="eyebrow">Registro di bordo_v3</div>
     <h2>Calcolo orario di uscita</h2>
     <span class="subtitle">Imposta la rotta della tua giornata lavorativa</span>
     <div class="gold-rule"></div>
@@ -628,7 +628,7 @@
 
             <div class="divider" id="dividerRegole"></div>
             <div class="result-row" id="rowPermessoRegole">
-                <span class="result-label">Permesso da prendere</span>
+                <span class="result-label">Permesso da regole</span>
                 <span class="result-value permesso" id="permessoVal">0 min</span>
             </div>
 
@@ -776,8 +776,8 @@ async function incrementVisitCounter() {
         }
         const next = current + 1;
         await window.storage.set("calcolo-uscita-visite", String(next), false);
-        label.textContent = "Questo tool è stato utilizzato già \u00b0 " + next + " volte!";
-           } catch (e) {
+        label.textContent = "Voce di registro n\u00b0 " + next;
+    } catch (e) {
         document.getElementById("visitCounter").style.display = "none";
     }
 }
