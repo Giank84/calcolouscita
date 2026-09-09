@@ -777,8 +777,7 @@ async function incrementVisitCounter() {
         const next = current + 1;
         await window.storage.set("calcolo-uscita-visite", String(next), false);
         label.textContent = "Questo tool è stato utilizzato già \u00b0 " + next + " volte!";
-        label.textContent = "Grazie! \u00b0";
-    } catch (e) {
+           } catch (e) {
         document.getElementById("visitCounter").style.display = "none";
     }
 }
